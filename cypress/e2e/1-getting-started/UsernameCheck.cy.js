@@ -3,7 +3,7 @@
 describe('Login', () => {
 
 
-    it ('test', () => {
+    it ('UsernameCheck', () => {
         cy.Login('Admin', 'admin123')
         cy.get('[class="oxd-text oxd-text--span oxd-main-menu-item--name"]').contains("My Info").click()
         cy.wait(3000)

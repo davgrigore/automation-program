@@ -1,5 +1,8 @@
 /// <reference types="cypress" />
 
+import homePage from '../../pageObjects/homePage';
+import myInfoPage from '../../pageObjects/myInfoPage';
+
 describe('Login', () => {
    
     beforeEach(() => {
@@ -8,15 +11,26 @@ describe('Login', () => {
 
     
     it('Update Contact Details', () => {
+
+const HomePage=new homePage()
+const MyInfoPage=new myInfoPage()
+
+
         cy.Login('Admin', 'admin123')
-        cy.get('.oxd-main-menu-item').contains('My Info').click()
-        cy.get('a[href="/web/index.php/pim/contactDetails/empNumber/7"]').click({force: true})
-        cy.get('[class="oxd-input oxd-input--active"]').eq(1).clear().type("street 1")
-        cy.get('[class="oxd-select-text oxd-select-text--active"]').click()
-        cy.get('[class="oxd-select-dropdown --positon-bottom"]').contains('Algeria').click()
-        cy.get('[class="oxd-button oxd-button--medium oxd-button--secondary orangehrm-left-space"').click()
-        cy.get('[class="oxd-text oxd-text--p oxd-text--toast-title oxd-toast-content-text"]').contains("Success")
-        cy.get('[class="oxd-text oxd-text--p oxd-text--toast-message oxd-toast-content-text"]').contains("Successfully Updated")
+        HomePage.getMyInfoButton().click()
+        MyInfoPage.getContactDetailsButton().click({force:true})
+        MyInfoPage.getStreet1Button().clear().type("street 1")
+        MyInfoPage.getCountryList().click()
+        cy.get('[class="oxd-select-option"]').each(($el,index, $list) => {
+            if($el.text()==='Algeria'){
+                cy.wrap($el).click()
+            }
+        })
+        MyInfoPage.getCountryList().should('have.text', 'Algeria')
+        MyInfoPage.getSaveButton().click({force: true})
+        MyInfoPage.getToastTitle().should('have.text', 'Success')
+        MyInfoPage.getToastText().should('have.text', 'Successfully Updated')
+
     });
 
 
